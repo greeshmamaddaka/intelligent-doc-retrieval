@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  doc_search_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: intelligent_doc_retrieval_api
+    ports:
+      - "8000:8000"
+    environment:
+      - CHUNK_SIZE=400
+      - CHUNK_OVERLAP=80
+      - EMBEDDING_MODEL_NAME=all-MiniLM-L6-v2
+      - VECTOR_DIMENSION=384
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
